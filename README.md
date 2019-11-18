@@ -52,7 +52,6 @@ To learn more about the mentioned above tools and technologies -  please check s
 
 
 # TODO
-- [ ] create (reuse) code for infrastructure
 - [ ] install TFE in Prod mode with external services
 - [ ] update README
 - [ ] make snapshot
@@ -62,6 +61,7 @@ To learn more about the mentioned above tools and technologies -  please check s
 
 # DONE
 - [x] define objectives 
+- [x] create (reuse) code for infrastructure
 
 
 # Run logs
