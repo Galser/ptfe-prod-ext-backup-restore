@@ -234,8 +234,34 @@ Ok - you have new PTFE installation with organization and workspace running - in
 
 
 ## Kill TFE - Imitating full application disaster
+To demonstrate recovery from a snapshot we are going to simulate full application disaster - wipe it out completely (preserving snapshot) and then restoring with the state.
 
-### Restore from a snapshot
+- Login via SSH to your VM by executing : 
+    ```
+    ssh ubuntu@tfe-ext-dr-1_backend.guselietov.com
+    ```
+- Become root :
+    ```
+    sudo su -
+    ```
+- There is a special script that will imitate the crash and disaster, but still preserve our snapshots in [/tmp/delete_all.sh](modules/compute_aws/scripts/delete_all.sh), 
+execute it (**still under root privileges**):
+    ```bash
+    bash /tmp/delete_all.sh
+    CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES    
+    ```
+  Done, let's check, execute  : 
+    ```
+    ls -l /var/lib/replicated
+    ls: cannot access '/var/lib/replicated': No such file or directory
+    ```
+  And the last check : 
+- Let's check that we indeed "have killed" our application by accessing the Admin Dashboard at the URL : https://tfe-ext-dr-1.guselietov.com:8800/dashboard, and we see : 
+
+    ![PTFE Dead](screenshots/15_ptfe_is_dead.png)
+
+
+## Restore from a snapshot
 
 
 ## Clean-up
