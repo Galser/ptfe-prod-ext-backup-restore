@@ -247,16 +247,24 @@ To demonstrate recovery from a snapshot we are going to simulate full applicatio
     ```
 - There is a special script that will imitate the crash and disaster, but still preserve our snapshots in [/tmp/delete_all.sh](modules/compute_aws/scripts/delete_all.sh), 
 execute it (**still under root privileges**):
-    ```bash
-    bash /tmp/delete_all.sh
-    CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES    
-    ```
-  Done, let's check, execute  : 
-    ```
-    ls -l /var/lib/replicated
-    ls: cannot access '/var/lib/replicated': No such file or directory
-    ```
-  And the last check : 
+   ```bash
+   /var/lib/replicated/snapshots is not a mountpoint
+   sending incremental file list
+   ./
+   files/
+   files/db.dump
+            74,767 100%   40.05MB/s    0:00:00 (xfr#1, to-chk=22/27)
+   sha256/
+   sha256/0cf5297d0cd91fe3f55b55fee2be7d8eea9d49c57ffdef3babe2bcd5e37ff501
+            34,437 100%   16.42MB/s    0:00:00 (xfr#2, to-chk=21/27)
+   ...
+   sha256/fe1278b0a1c542741f1f8680d4789527499b901c66a31d1c8fc9eedc9b7279e1
+               884 100%    2.78kB/s    0:00:00 (xfr#23, to-chk=0/32)
+   tmp/
+
+   sent 99,906,697 bytes  received 495 bytes  28,544,912.00 bytes/sec
+   total size is 99,919,131  speedup is 1.00         
+   ```
 - Let's check that we indeed "have killed" our application by accessing the Admin Dashboard at the URL : https://tfe-ext-dr-1.guselietov.com:8800/dashboard, and we see : 
 
     ![PTFE Dead](screenshots/15_ptfe_is_dead.png)
