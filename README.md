@@ -88,6 +88,7 @@ region = eu-central-1
 ```
 
 We are going to use them later. 
+
 ## Install TFE
 
 ### Terminal-based portion of TFE installation
@@ -246,16 +247,24 @@ To demonstrate recovery from a snapshot we are going to simulate full applicatio
     ```
 - There is a special script that will imitate the crash and disaster, but still preserve our snapshots in [/tmp/delete_all.sh](modules/compute_aws/scripts/delete_all.sh), 
 execute it (**still under root privileges**):
-    ```bash
-    bash /tmp/delete_all.sh
-    CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES    
-    ```
-  Done, let's check, execute  : 
-    ```
-    ls -l /var/lib/replicated
-    ls: cannot access '/var/lib/replicated': No such file or directory
-    ```
-  And the last check : 
+   ```bash
+   /var/lib/replicated/snapshots is not a mountpoint
+   sending incremental file list
+   ./
+   files/
+   files/db.dump
+            74,767 100%   40.05MB/s    0:00:00 (xfr#1, to-chk=22/27)
+   sha256/
+   sha256/0cf5297d0cd91fe3f55b55fee2be7d8eea9d49c57ffdef3babe2bcd5e37ff501
+            34,437 100%   16.42MB/s    0:00:00 (xfr#2, to-chk=21/27)
+   ...
+   sha256/fe1278b0a1c542741f1f8680d4789527499b901c66a31d1c8fc9eedc9b7279e1
+               884 100%    2.78kB/s    0:00:00 (xfr#23, to-chk=0/32)
+   tmp/
+
+   sent 99,906,697 bytes  received 495 bytes  28,544,912.00 bytes/sec
+   total size is 99,919,131  speedup is 1.00         
+   ```
 - Let's check that we indeed "have killed" our application by accessing the Admin Dashboard at the URL : https://tfe-ext-dr-1.guselietov.com:8800/dashboard, and we see : 
 
     ![PTFE Dead](screenshots/15_ptfe_is_dead.png)
@@ -280,43 +289,44 @@ execute it (**still under root privileges**):
     - Press **[Upload & Continue]**
 - Now, at the screen asking for the license, stop, there should be the link below : **[Restore from a snapshot]** : 
     
-    ![License](screenshots/13_license_question.png)
+    ![License](screenshots/16_license_question.png)
 
     Click it
 
 - At the next screen, you going to see: *Restore from a snapshot* with the message below -  *No snapshot found*
 
-    You will need to enter the into field : "Snapshot File Path" following path (same as 1-st time) - `/tfe-snapshots` : 
-
-    ![Snapshot path](screenshots/14_snapshot_path.png)
-
+    ![No snapshots](screenshots/17_no_snapshots.png)
+    
     Press the button **[Browse snapshots]**, and you going to see after some time : 
 
-    ![List of snapshots](screenshots/15_snapshots_list.png)
+    ![List of snapshots](screenshots/18_snapshots_list.png)
 
 - Choose the latest snapshot in the list and press the small button **[restore]** next to it, after that you will see a series of the screens with progress status  :
 
-    ![Restoring snapshot](screenshots/16_restoring.png)
+    ![Restoring snapshot](screenshots/19_restoring.png)
 
     And at the end - request to **unlock Admin Console**: 
 
-    ![Unlock](screenshots/17_unlock_console.png)
+    ![Unlock](screenshots/20_unlock_console.png)
 
 - Unlock the console by entering the password from the very first installation and you will see again screen with *"Preflight Checks"*, press **[Continue]** button
 
 -  Now you will see next screen - *Restore Cluster*, press the button **Restore** :
 
+    ![Restore Cluster](screenshots/21_restore_cluster.png)
+
+
 - After the process is finished, you going to see **"Cluster"** state page from where you can directly go to the *(Dashboard of Admin Console* and observe the progress : 
 
-    ![Restore progress 2](screenshots/19_while_restore_status.png)
+    ![Restore progress 2](screenshots/22_while_restore_status.png)
 
     > Note: You can spot that the right section right now have only **Snapshots Enabled** message, and nothing more.
 
     Wait until it finishes.
 
-- Open *PTFE Dashboard* ( not Admin Console!), at workspaces for our [Looney Tunes-inspired organization](https://en.wikipedia.org/wiki/Acme_Corporation) : https://ptfe-pm-2.guselietov.com/app/acme/workspaces :
+- Open *PTFE Dashboard* ( not Admin Console!), at workspaces for our [Looney Tunes-inspired organization](https://en.wikipedia.org/wiki/Acme_Corporation) : https://tfe-ext-dr-1.guselietov.com/app/acme-dr/workspaces :
 
-    ![organization and workspace in place](screenshots/20_org_and_work_still_here.png)
+    ![organization and workspace in place](screenshots/23_org_and_work_still_here.png)
 
     As you can see from the screenshot - everything is in place.
 
@@ -334,7 +344,6 @@ And answering 'yes' to the question.
 
 
 # TODO
-- [ ] update README for restore part
 
 # DONE
 - [x] define objectives 
@@ -344,6 +353,7 @@ And answering 'yes' to the question.
 - [x] make snapshot
 - [x] kill TFE
 - [x] restore TFE from snapshot
+- [x] update README for restore part
 
 
 # Run logs
