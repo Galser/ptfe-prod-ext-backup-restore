@@ -262,7 +262,65 @@ execute it (**still under root privileges**):
 
 
 ## Restore from a snapshot
+- If you are still in SSH session with your VM, reuse it, otherwise please connect once more by executing : 
+    ```
+    ssh ubuntu@tfe-ext-dr-1_backend.guselietov.com
+    ```
+- Start the installation of PTFE again (remember? we had wiped out everything!) by executing : 
+    ```bash
+    curl https://install.terraform.io/ptfe/stable | sudo bash
+    ```
+- Repeat everything for the terminal portion of the install
+    - select and re-use the same IP-address (as the first time) `10.0.1.67` for 1-st question
+    - confirm default address for the service IP (again, in our case  - same as the first time): `18.184.74.49` 
+    - Select `no proxy` for Internet access
+- Go the Web-portion of PTFE install, open in your browser: https://18.184.74.49:8800/
+    - Press **[Continue to Setup]** and confirm security exception
+    - at the screen *"HTTPS for admin console"* - supply proper SSL keys (**SAME as first time!**), certificate and bundle, use the name *"tfe-ext-dr-1.guselietov.com"* for the host (again - SAME name)
+    - Press **[Upload & Continue]**
+- Now, at the screen asking for the license, stop, there should be the link below : **[Restore from a snapshot]** : 
+    
+    ![License](screenshots/13_license_question.png)
 
+    Click it
+
+- At the next screen, you going to see: *Restore from a snapshot* with the message below -  *No snapshot found*
+
+    You will need to enter the into field : "Snapshot File Path" following path (same as 1-st time) - `/tfe-snapshots` : 
+
+    ![Snapshot path](screenshots/14_snapshot_path.png)
+
+    Press the button **[Browse snapshots]**, and you going to see after some time : 
+
+    ![List of snapshots](screenshots/15_snapshots_list.png)
+
+- Choose the latest snapshot in the list and press the small button **[restore]** next to it, after that you will see a series of the screens with progress status  :
+
+    ![Restoring snapshot](screenshots/16_restoring.png)
+
+    And at the end - request to **unlock Admin Console**: 
+
+    ![Unlock](screenshots/17_unlock_console.png)
+
+- Unlock the console by entering the password from the very first installation and you will see again screen with *"Preflight Checks"*, press **[Continue]** button
+
+-  Now you will see next screen - *Restore Cluster*, press the button **Restore** :
+
+- After the process is finished, you going to see **"Cluster"** state page from where you can directly go to the *(Dashboard of Admin Console* and observe the progress : 
+
+    ![Restore progress 2](screenshots/19_while_restore_status.png)
+
+    > Note: You can spot that the right section right now have only **Snapshots Enabled** message, and nothing more.
+
+    Wait until it finishes.
+
+- Open *PTFE Dashboard* ( not Admin Console!), at workspaces for our [Looney Tunes-inspired organization](https://en.wikipedia.org/wiki/Acme_Corporation) : https://ptfe-pm-2.guselietov.com/app/acme/workspaces :
+
+    ![organization and workspace in place](screenshots/20_org_and_work_still_here.png)
+
+    As you can see from the screenshot - everything is in place.
+
+This concludes the instruction section. now we have successfully performed the restore from a snapshot and resurrected our PTFE, thank you.
 
 ## Clean-up
 
@@ -276,8 +334,6 @@ And answering 'yes' to the question.
 
 
 # TODO
-- [ ] kill TFE
-- [ ] restore TFE from snapshot
 - [ ] update README for restore part
 
 # DONE
@@ -286,6 +342,8 @@ And answering 'yes' to the question.
 - [x] install TFE in Prod mode with external services
 - [x] update README
 - [x] make snapshot
+- [x] kill TFE
+- [x] restore TFE from snapshot
 
 
 # Run logs
